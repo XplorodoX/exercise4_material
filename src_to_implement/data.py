@@ -5,6 +5,7 @@ from skimage.io import imread
 from skimage.color import gray2rgb
 import numpy as np
 import torchvision as tv
+import os
 
 train_mean = [0.59685254, 0.59685254, 0.59685254]
 train_std = [0.16043035, 0.16043035, 0.16043035]
@@ -63,24 +64,43 @@ class ChallengeDataset(Dataset):
             # Use the first column as the image path
             img_path = row.iloc[0]
 
-        # Handle relative paths - prepend current directory if needed
+        # Handle relative paths - try multiple possible locations
         if not Path(img_path).is_absolute():
+            # Get the directory where the script is being run from
+            script_dir = Path.cwd()
+
             # Try different possible base directories
             possible_paths = [
-                img_path,  # Try as is
-                Path('.') / img_path,  # Current directory
-                Path('data') / img_path,  # Data subdirectory
-                Path('..') / img_path,  # Parent directory
+                script_dir / img_path,  # Current directory
+                script_dir / 'images' / Path(img_path).name,  # images subdirectory with just filename
+                script_dir / '..' / img_path,  # Parent directory
+                script_dir / '..' / 'images' / Path(img_path).name,  # Parent/images directory
+                script_dir / 'src_to_implement' / img_path,  # src_to_implement directory
+                script_dir / 'src_to_implement' / '..' / img_path,  # From src_to_implement up one level
+                Path(img_path),  # Try as is
             ]
 
             img_path_found = None
             for possible_path in possible_paths:
-                if Path(possible_path).exists():
+                if possible_path.exists():
                     img_path_found = str(possible_path)
                     break
 
             if img_path_found is None:
+                # Print debug information
+                print(f"Could not find image file: {img_path}")
+                print(f"Current working directory: {script_dir}")
+                print(f"Tried paths:")
+                for p in possible_paths:
+                    print(f"  - {p} (exists: {p.exists()})")
+
+                # List contents of current directory for debugging
+                print("Contents of current directory:")
+                for item in script_dir.iterdir():
+                    print(f"  - {item}")
+
                 raise FileNotFoundError(f"Could not find image file: {img_path}")
+
             img_path = img_path_found
 
         # Load the image
