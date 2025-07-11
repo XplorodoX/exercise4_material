@@ -64,47 +64,33 @@ class ChallengeDataset(Dataset):
             # Use the first column as the image path
             img_path = row.iloc[0]
 
-        # Handle relative paths - try multiple possible locations
-        if not Path(img_path).is_absolute():
-            # Get the directory where the script is being run from
-            script_dir = Path.cwd()
+        # Convert to Path object for easier handling
+        img_path = Path(img_path)
 
-            # Try different possible base directories
-            possible_paths = [
-                script_dir / img_path,  # Current directory
-                script_dir / 'images' / Path(img_path).name,  # images subdirectory with just filename
-                script_dir / '..' / img_path,  # Parent directory
-                script_dir / '..' / 'images' / Path(img_path).name,  # Parent/images directory
-                script_dir / 'src_to_implement' / img_path,  # src_to_implement directory
-                script_dir / 'src_to_implement' / '..' / img_path,  # From src_to_implement up one level
-                Path(img_path),  # Try as is
-            ]
+        # If it's already an absolute path and exists, use it
+        if img_path.is_absolute() and img_path.exists():
+            final_path = img_path
+        else:
+            # Get the directory where data.py is located
+            data_py_dir = Path(__file__).parent
 
-            img_path_found = None
-            for possible_path in possible_paths:
-                if possible_path.exists():
-                    img_path_found = str(possible_path)
-                    break
+            # Try to find the image file
+            # First, try relative to data.py's directory
+            final_path = data_py_dir / img_path
 
-            if img_path_found is None:
-                # Print debug information
-                print(f"Could not find image file: {img_path}")
-                print(f"Current working directory: {script_dir}")
-                print(f"Tried paths:")
-                for p in possible_paths:
-                    print(f"  - {p} (exists: {p.exists()})")
+            # If not found and path starts with 'images/', try without it
+            if not final_path.exists() and str(img_path).startswith('images/'):
+                final_path = data_py_dir / img_path.name
 
-                # List contents of current directory for debugging
-                print("Contents of current directory:")
-                for item in script_dir.iterdir():
-                    print(f"  - {item}")
+            # If still not found, try in the images subdirectory
+            if not final_path.exists():
+                final_path = data_py_dir / 'images' / img_path.name
 
+            if not final_path.exists():
                 raise FileNotFoundError(f"Could not find image file: {img_path}")
 
-            img_path = img_path_found
-
         # Load the image
-        image = imread(img_path)
+        image = imread(str(final_path))
 
         # Convert grayscale to RGB
         if len(image.shape) == 2:  # Grayscale image
