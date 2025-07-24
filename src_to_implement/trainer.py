@@ -120,7 +120,7 @@ class Trainer:
         best_thresholds = [0.5, 0.5]
         best_f1_scores = [0.0, 0.0]
         
-        for threshold in np.arange(0.1, 0.9, 0.05):
+        for threshold in np.arange(0.1, 0.9, 0.01):
             binary_preds_thresh = (all_predictions > threshold).astype(int)
             f1_crack_thresh = f1_score(all_labels[:, 0], binary_preds_thresh[:, 0])
             f1_inactive_thresh = f1_score(all_labels[:, 1], binary_preds_thresh[:, 1])

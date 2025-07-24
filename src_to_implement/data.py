@@ -17,10 +17,11 @@ class ChallengeDataset(Dataset):
             self.transform = tv.transforms.Compose([
                 tv.transforms.RandomHorizontalFlip(p=0.5),
                 tv.transforms.RandomVerticalFlip(p=0.5),
-                tv.transforms.RandomRotation(15),
-                tv.transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
-                tv.transforms.RandomResizedCrop(size=(300, 300), scale=(0.8, 1.0)),
+                tv.transforms.RandomRotation(20),
+                tv.transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.2),
+                tv.transforms.RandomResizedCrop(size=(300, 300), scale=(0.7, 1.0)),
                 tv.transforms.ToTensor(),
+                tv.transforms.RandomErasing(p=0.5, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0, inplace=False),
                 tv.transforms.Normalize(mean=train_mean, std=train_std)
             ])
         else:

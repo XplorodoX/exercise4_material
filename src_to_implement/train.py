@@ -67,7 +67,7 @@ if __name__ == '__main__':
     # Optimierte Hyperparameter
     learning_rate = 0.0005  # Niedrigere Learning Rate
     optimizer = t.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-3)
-    
+
     # Learning Rate Scheduler
     scheduler = t.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5)
 
