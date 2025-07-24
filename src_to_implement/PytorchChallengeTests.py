@@ -10,7 +10,6 @@ import stat
 
 ID = 4  # identifier for dispatcher
 
-
 class TestAccess(unittest.TestCase):
     def test_access(self):
         try:
