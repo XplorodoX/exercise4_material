@@ -65,8 +65,8 @@ if __name__ == '__main__':
     criterion = FocalLoss(alpha=1.0, gamma=2.0)
 
     # Optimierte Hyperparameter
-    learning_rate = 0.0005  # Niedrigere Learning Rate
-    optimizer = t.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-3)
+    learning_rate = 0.0001  # Niedrigere Learning Rate
+    optimizer = t.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-5)
 
     # Learning Rate Scheduler
     scheduler = t.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5)
