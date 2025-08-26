@@ -69,7 +69,7 @@ if __name__ == '__main__':
     optimizer = t.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-5)
 
     # Learning Rate Scheduler
-    scheduler = t.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.2, patience=5)
+    scheduler = t.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.4, patience=5)
 
     trainer = Trainer(
         model=model,
