@@ -79,12 +79,13 @@ if __name__ == '__main__':
         val_test_dl=val_loader,
         cuda=True,
         early_stopping_patience=15,  # Mehr Geduld für bessere Konvergenz
-        scheduler=scheduler
+        scheduler=scheduler,
     )
+
+    res = trainer.fit(epochs=100)
 
     print("Starting training...")
 
-    res = trainer.fit(epochs=100)
 
     plt.figure(figsize=(15, 5))
     
