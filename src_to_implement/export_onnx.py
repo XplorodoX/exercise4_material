@@ -3,11 +3,13 @@ from trainer import Trainer
 from model import ResNet
 import sys
 
-if len(sys.argv) != 2:
-    print("Usage: python export_onnx.py <epoch_number>")
-    sys.exit(1)
+#if len(sys.argv) != 2:
+  #  print("Usage: python export_onnx.py <epoch_number>")
+ #   sys.exit(1)
 
-epoch = int(sys.argv[1])
+#epoch = int(sys.argv[1])
+
+epoch = 53
 
 model = ResNet()
 
